@@ -22,7 +22,9 @@
     "abort",
     "propagation"
   ],
-  "author": "",
+  "author": "Amit Tiwari",
+  "url": "https://github.com/amit-t/unreq",
+  "homepage": "https://www.npmjs.com/package/unreq",
   "license": "MIT",
   "dependencies": {
     "@opentelemetry/api": "^1.9.0",
