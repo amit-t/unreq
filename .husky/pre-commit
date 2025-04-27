@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Run Biome for formatting and linting
+pnpm lint
+
+# Run TypeScript type check
+npx tsc --noEmit
