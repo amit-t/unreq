@@ -1,0 +1,39 @@
+{
+  "name": "unreq",
+  "version": "0.1.0",
+  "description": "HTTP cancellation propagation library",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "prepare": "husky install",
+    "build": "tsc -p tsconfig.json",
+    "lint": "biome check . && biome format .",
+    "dev": "bun run src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "http",
+    "cancellation",
+    "abort",
+    "propagation"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/instrumentation-http": "^0.200.0",
+    "@opentelemetry/instrumentation-redis": "^0.47.0",
+    "@opentelemetry/sdk-node": "^0.200.0",
+    "express": "^5.1.0",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.1",
+    "@types/node": "^20.3.1",
+    "biome": "^0.3.3",
+    "husky": "^8.0.3",
+    "typescript": "^5.1.3"
+  }
+}
