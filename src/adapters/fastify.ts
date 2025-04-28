@@ -1,5 +1,5 @@
 // src/adapters/fastify.ts
-import type { FastifyRequest, FastifyReply, FastifyPluginCallback, FastifyInstance } from 'fastify';
+import type { FastifyRequest, FastifyReply, FastifyInstance } from 'fastify';
 import fp from 'fastify-plugin';
 import { LibraryConfig, CancellationRegistry } from '../types';
 import { createCancellationRegistry } from '../index';
@@ -19,14 +19,18 @@ declare module 'fastify' {
   }
 }
 
-export interface FastifyCancellationOptions extends LibraryConfig {
+// Make all properties optional to satisfy FastifyPluginCallback constraint
+export interface FastifyCancellationOptions {
+  dbCancellationHook?: LibraryConfig['dbCancellationHook'];
+  registry?: LibraryConfig['registry'];
+  otelTracerProvider?: LibraryConfig['otelTracerProvider'];
   requestIdHeader?: string;
 }
 
 /**
  * Fastify plugin for HTTP cancellation propagation
  */
-export const fastifyCancellation = fp<FastifyPluginCallback<FastifyCancellationOptions>>(
+export const fastifyCancellation = fp(
   (fastify: FastifyInstance, options: FastifyCancellationOptions, done: (err?: Error) => void) => {
     const {
       requestIdHeader = 'x-request-id',
@@ -35,7 +39,20 @@ export const fastifyCancellation = fp<FastifyPluginCallback<FastifyCancellationO
       dbCancellationHook
     } = options;
 
-    const cancellationRegistry = createCancellationRegistry(options);
+    // Ensure we have the required properties for LibraryConfig
+    if (!dbCancellationHook) {
+      return done(new Error('dbCancellationHook is required'));
+    }
+    
+    // Create a compatible LibraryConfig object
+    const config: LibraryConfig = {
+      dbCancellationHook,
+      registry: registryConfig,
+      requestIdHeader,
+      otelTracerProvider
+    };
+    
+    const cancellationRegistry = createCancellationRegistry(config);
     const otel = otelTracerProvider ? new OTelIntegration() : null;
 
     // Make registry accessible via app instance
