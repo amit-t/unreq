@@ -113,6 +113,7 @@ export const fastifyCancellation = fp(
     });
 
     // Helper method to associate DB identifier
+    // biome-ignore lint/suspicious/noExplicitAny: following interface definition in types.ts
     fastify.decorate("associateDbIdentifier", async (requestId: string, dbIdentifier: any) => {
       try {
         await Promise.resolve(cancellationRegistry.associateDbIdentifier(requestId, dbIdentifier));
@@ -134,6 +135,7 @@ export const fastifyCancellation = fp(
  */
 export function withDbCancellation<T>(
   handler: (request: FastifyRequest, reply: FastifyReply) => Promise<T>,
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   getDbIdentifier: (request: FastifyRequest) => any
 ): (request: FastifyRequest, reply: FastifyReply) => Promise<T> {
   return async (request, reply) => {
