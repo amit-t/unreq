@@ -1,11 +1,10 @@
 // src/adapters/fastify.ts
-import type { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
-import fp from "fastify-plugin";
-import type { LibraryConfig, CancellationRegistry } from "../types";
-import { createCancellationRegistry } from "../index";
-import { OTelIntegration } from "../otel";
-// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
-import { randomUUID } from "crypto";
+import type { FastifyRequest, FastifyReply, FastifyInstance } from 'fastify';
+import fp from 'fastify-plugin';
+import { LibraryConfig, CancellationRegistry } from '../types';
+import { createCancellationRegistry } from '../index';
+import { OTelIntegration } from '../otel';
+import { randomUUID } from 'crypto';
 
 declare module "fastify" {
   interface FastifyInstance {
@@ -23,9 +22,9 @@ declare module "fastify" {
 
 // Make all properties optional to satisfy FastifyPluginCallback constraint
 export interface FastifyCancellationOptions {
-  dbCancellationHook?: LibraryConfig["dbCancellationHook"];
-  registry?: LibraryConfig["registry"];
-  otelTracerProvider?: LibraryConfig["otelTracerProvider"];
+  dbCancellationHook?: LibraryConfig['dbCancellationHook'];
+  registry?: LibraryConfig['registry'];
+  otelTracerProvider?: LibraryConfig['otelTracerProvider'];
   requestIdHeader?: string;
 }
 
@@ -43,17 +42,17 @@ export const fastifyCancellation = fp(
 
     // Ensure we have the required properties for LibraryConfig
     if (!dbCancellationHook) {
-      return done(new Error("dbCancellationHook is required"));
+      return done(new Error('dbCancellationHook is required'));
     }
-
+    
     // Create a compatible LibraryConfig object
     const config: LibraryConfig = {
       dbCancellationHook,
       registry: registryConfig,
       requestIdHeader,
-      otelTracerProvider,
+      otelTracerProvider
     };
-
+    
     const cancellationRegistry = createCancellationRegistry(config);
     const otel = otelTracerProvider ? new OTelIntegration() : null;
 
